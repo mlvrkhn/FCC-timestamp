@@ -23,20 +23,8 @@ app.get('/', function (req, res) {
 // your first API endpoint...
 app.get('/api/hello', function (req, res) {
 	res.json({ greeting: 'hello API' });
-});
 
-app.get('/api/:unix', function (req, res) {
-	const { unix } = req.params;
-
-	if (!isNaN(unix)) {
-		const date = new Date(parseInt(unix));
-		res.json({
-			unix: date.getTime(),
-			utc: date.toUTCString(),
-		});
-	} else {
-		res.json({ error: 'Invalid Date' });
-	}
+	console.log('hello', new Date(1451001600000));
 });
 
 app.get('/api/:date?', function (req, res) {
@@ -48,15 +36,50 @@ app.get('/api/:date?', function (req, res) {
 			utc: new Date().toUTCString(),
 		});
 	} else if (moment(date).isValid()) {
-		const dateObj = new Date(date);
 		res.json({
-			unix: dateObj.getTime(),
-			utc: dateObj.toUTCString(),
+			unix: new Date(date).getTime(),
+			utc: new Date(date).toUTCString(),
+		});
+	} else if (!isNaN(date)) {
+		res.json({
+			unix: new Date(parseInt(date)).getTime(),
+			utc: new Date(parseInt(date)).toUTCString(),
 		});
 	} else {
 		res.json({ error: 'Invalid Date' });
 	}
 });
+
+// app.get('/api/:unix', function (req, res) {
+// 	const { unix } = req.params;
+
+// 	if (!isNaN(unix)) {
+// 		const date = new Date(parseInt(unix));
+// 		res.json({
+// 			unix: date.getTime(),
+// 			utc: date.toUTCString(),
+// 		});
+// 	}
+// });
+
+// app.get('/api/:date?', function (req, res) {
+// 	const { date } = req.params;
+// 	const dateObj = new Date(date);
+
+// 	if (!date) {
+// 		res.json({
+// 			unix: new Date().getTime(),
+// 			utc: new Date().toUTCString(),
+// 		});
+// 	} else if (moment(dateObj).isValid()) {
+// 		res.json({
+// 			unix: dateObj.getTime(),
+// 			utc: dateObj.toUTCString(),
+// 		});
+// 	} else {
+// 		res.json({ error: 'Invalid Date' });
+// 	}
+// });
 
 // listen for requests :)
 var listener = app.listen(process.env.PORT, function () {
